@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.ContactMapper">
+
+	<resultMap type="UserContactVo" id="ContactMap" autoMapping="true">
+		<id property="id" column="id" />
+		<association property="relation" javaType="UserRelationBean">
+			<id property="id" column="rid" />
+			<result property="userId" column="userId" />
+			<result property="toUserId" column="toUserId" />
+			<result property="applyTime" column="applyTime" />
+			<result property="actionTime" column="actionTime" />
+			<result property="state" column="rstate" />
+			<result property="type" column="rtype" />
+			<result property="remark" column="remark" />
+		</association>
+	</resultMap>
+
+	<!-- 获取用户所有联系人数量 -->
+	<select id="selectContacts2UserCount" resultType="int">
+		SELECT count(*)
+		FROM sec_user_relation
+		WHERE userId = #{userId} and state = 1
+	</select>
+
+	<!-- 获取用户所有联系人 -->
+	<select id="selectContacts2UserList" resultMap="ContactMap">
+		SELECT
+		r.id as rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		FROM sec_user_relation r
+		left join sec_user u
+		on r.toUserId = u.id
+		WHERE
+		r.userId = #{userId}
+		and r.state = 1
+		ORDER BY u.letter
+	</select>
+
+	<!-- 获取未添加过的联系人数量，不包括正在审核的 -->
+	<select id="selectContactsCount" resultType="int">
+		SELECT count(*)
+		FROM sec_user_auth a
+		left join sec_user u
+		on a.userId =
+		u.id
+		WHERE a.state = 1
+		<if test="key != null">
+			and (u.name = #{key}
+			or u.phone = #{key})
+		</if>
+		and a.userId != #{userId}
+		ORDER BY u.letter
+	</select>
+
+	<select id="selectlinkedContacts2User" resultMap="ContactMap">
+		SELECT
+		r.id as rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		FROM sec_user_relation r
+		left join sec_user u
+		on r.toUserId = u.id
+		WHERE
+		r.userId = #{userId}
+		and (r.state = 1 or r.state = 0)
+		ORDER BY u.letter
+	</select>
+
+	<!-- 获取用户所有联系人 -->
+	<select id="selectContactsList" resultMap="ContactMap">
+		SELECT u.*
+		FROM sec_user_auth a
+		left join sec_user u
+		on a.userId = u.id
+		WHERE a.state = 1
+		<if test="key != null">
+			and (u.name = #{key}
+			or u.phone = #{key})
+		</if>
+		and a.userId != #{userId}
+		ORDER BY u.letter
+	</select>
+
+	<!-- 获取申请用户的联系人数量 -->
+	<select id="selectApplyCount" resultType="int">
+		SELECT count(*)
+		FROM
+		sec_user_relation
+		WHERE toUserId = #{userId} and type = 1
+	</select>
+
+	<!-- 获取申请用户的联系人 -->
+	<select id="selectApplyList" resultMap="ContactMap">
+		SELECT
+		r.id as rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		FROM sec_user_relation r
+		left join sec_user u
+		on r.userId = u.id
+		WHERE
+		r.toUserId = #{userId}
+		and r.type = 1
+		ORDER BY u.letter
+	</select>
+
+	<!-- 获取用户邀请的联系人数量 -->
+	<select id="selectInviteCount" resultType="int">
+		SELECT count(*)
+		FROM
+		sec_user_relation
+		WHERE userId = #{userId} and type = 1
+	</select>
+
+	<!-- 获取用户邀请的联系人 -->
+	<select id="selectInviteList" resultMap="ContactMap">
+		SELECT
+		r.id as rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		FROM sec_user_relation r
+		left join sec_user u
+		on r.toUserId = u.id
+		WHERE
+		r.userId = #{userId}
+		and r.type = 1
+		ORDER BY u.letter
+	</select>
+
+	<!-- 获取分组内联系人数量 -->
+	<select id="selectGroupContactsCount" resultType="int">
+		SELECT count(*)
+		FROM sec_user_group_meb
+		WHERE groupId = #{groupId}
+	</select>
+
+	<!-- 获取分组内联系人 -->
+	<select id="selectGroupContactsList" resultMap="ContactMap">
+		SELECT
+		u.*
+		FROM sec_user_group_meb m
+		left join sec_user u
+		on m.userId = u.id
+		WHERE
+		m.groupId = #{groupId}
+		ORDER BY m.createTime DESC
+	</select>
+
+	<!-- 获取联系人关系 -->
+	<select id="selectOneByUid" resultType="UserRelationBean">
+		SELECT
+		*
+		FROM sec_user_relation
+		WHERE
+		userId = #{userId}
+		and toUserId = #{toUserId}
+	</select>
+
+
+	<!-- 获取联系人关系 -->
+	<select id="selectOneById" resultType="UserRelationBean">
+		SELECT
+		*
+		FROM sec_user_relation
+		WHERE
+		id = #{id}
+	</select>
+
+
+	<!-- 插入用户关系信息 -->
+	<insert id="insert">
+		INSERT INTO sec_user_relation
+		(id, userId, toUserId,
+		applyTime, state, remark, type)
+		VALUES
+		( #{id}, #{userId}, #{toUserId},
+		now(), #{state}, #{remark}, #{type});
+	</insert>
+
+
+	<!-- 更新用户关系信息 -->
+	<update id="updateState">
+		UPDATE sec_user_relation
+		<set>
+			<if test="state != null">state = #{state},</if>
+			<if test="applyTime != null">applyTime = #{applyTime},</if>
+			<if test="type != null">type = #{type},</if>
+			actionTime = now()
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from sec_user_relation where id = #{id};
+	</delete>
+
+	<delete id="deleteGroupUser">
+		DELETE gm
+		FROM
+		sec_user_group g,
+		sec_user_group_meb gm
+		WHERE
+		gm.groupId = g.id
+		AND g.userId = #{userId}
+		AND gm.userId = #{conUserId};
+	</delete>
+
+
+	<!-- 获取用户所有联系人数量 -->
+	<select id="selectGroupUserCount" resultType="int">
+		SELECT count(*)
+		FROM
+		sec_user_group g,
+		sec_user_group_meb gm
+		WHERE
+		gm.groupId = g.id
+		AND g.userId = #{userId}
+		AND gm.userId = #{conUserId};
+	</select>
+
+
+</mapper>

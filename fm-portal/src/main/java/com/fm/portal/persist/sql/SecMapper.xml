@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.SecMapper">
+
+	<resultMap type="SecurityBean" id="SecMap" autoMapping="true">
+		<id property="id" column="id"/>
+			<result property="plotName" column="plotName"/>
+			<result property="address" column="address"/>
+			<result property="plotType" column="plotType"/>
+			<result property="propertyName" column="propertyName"/>
+			<result property="plotBoxName" column="plotBoxName"/>
+	</resultMap>
+	
+	<select id="selectOneById" resultMap="SecMap">
+		select s.*,p.name as plotName, p.address, p.type as plotType, 
+		pr.name as propertyName, pb.name as plotBoxName
+		from sec_user_sec s
+		left join sec_plot p
+		on s.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_plot_box pb
+		on s.boxId = pb.id
+		<where>
+			s.secId = #{secId}
+		</where>
+	</select>
+	
+	<select id="selectOneByPhone" resultMap="SecMap">
+		select s.*,p.name as plotName, p.address, p.type as plotType, 
+		pr.name as propertyName, pb.name as plotBoxName
+		from sec_user_sec s
+		left join sec_plot p
+		on s.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_plot_box pb
+		on s.boxId = pb.id
+		<where>
+			s.phone = #{phone}
+		</where>
+	</select>
+	
+	
+	<select id="selectOneByOpenId" resultMap="SecMap">
+		select s.*,p.name as plotName, p.address, p.type as plotType, 
+		pr.name as propertyName, pb.name as plotBoxName
+		from sec_user_sec s
+		left join sec_plot p
+		on s.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_plot_box pb
+		on s.boxId = pb.id
+		left join sec_user_third ut
+		on s.secId = ut.userId
+		<where>
+			ut.loginType = 2
+			and ut.openId = #{openId}
+		</where>
+	</select>
+	
+	
+		<!-- 保安认证 -->
+	<insert id="insertSec">
+		INSERT INTO sec_user_sec
+		(secId, password,icon, name, gender, phone, height, health, idNo, ext, photo,
+			station, secNo, submitTime, state,
+			isAllot, isAuthSec, qualified)
+		VALUES
+		(#{secId}, #{password},#{icon},#{name},#{gender},#{phone},#{height},#{health},#{idNo},#{ext},#{photo},
+			#{station},#{secNo},now(),#{state},
+			#{isAllot},#{isAuthSec},#{qualified})
+	</insert>
+	
+	<!-- 更新用户 -->
+	<update id="updateSec">
+		UPDATE sec_user_sec
+		<set>
+			<if test="state != null">
+				state = #{state},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>
+			<if test="height != null">
+				height = #{height},
+			</if>
+			<if test="health != null">
+				health = #{health},
+			</if>
+			<if test="idNo != null">
+				idNo = #{idNo},
+			</if>
+			<if test="ext != null">
+				ext = #{ext},
+			</if>
+			<if test="photo != null">
+				photo = #{photo},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="icon != null">
+				icon = #{icon},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="isSetPwd != null">
+				isSetPwd = #{isSetPwd},
+			</if>
+			<if test="station != null">
+				station = #{station},
+			</if>
+			<if test="secNo != null">
+				secNo = #{secNo},
+			</if>
+			<if test="isAllot != null">
+				isAllot = #{isAllot},
+			</if>
+			<if test="isAuthSec != null">
+				isAuthSec = #{isAuthSec},
+			</if>
+			<if test="qualified != null">
+				qualified = #{qualified},
+			</if>
+		</set>
+		WHERE secId = #{secId};
+	</update>
+	<!-- 更新用户密码 -->
+	<update id="updateLoginTime">
+		UPDATE sec_user_sec
+		<set>
+			lastLoginTime = now()
+		</set>
+		WHERE secId = #{secId};
+	</update>	
+	
+	
+	
+	
+	
+</mapper>

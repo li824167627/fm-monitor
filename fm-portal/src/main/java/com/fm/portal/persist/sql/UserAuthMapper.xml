@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.UserAuthMapper">
+
+	<!-- 插入用户认证信息 -->
+	<insert id="insert">
+		INSERT INTO sec_user_auth
+		(userId, name, gender, idNo, ext, createTime, state)
+		VALUES
+		( #{userId}, #{name}, #{gender}, #{idNo}, #{ext}, now(), #{state});
+	</insert>
+	
+	<!-- 插入用户认证日志信息 -->
+	<insert id="insertAuthLog">
+		INSERT INTO sec_user_auth_log
+		(userId, name, gender, idNo, ext, createTime, state)
+		VALUES
+		( #{userId}, #{name}, #{gender}, #{idNo}, #{ext}, now(), #{state});
+	</insert>
+
+	<!-- 根据uid获取用户审核信息 -->
+	<select id="selectAuthByUid" resultType="UserAuthBean">
+		SELECT *
+		FROM sec_user_auth
+		WHERE userId = #{userId}
+	</select>
+	
+	<!-- 更新用户审核信息 -->
+	<update id="update">
+		UPDATE sec_user_auth
+		<set>
+			<if test="idNo != null">idNo = #{idNo},</if>
+			<if test="ext != null">ext = #{ext},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="name != null">name = #{name},</if>
+			<if test="gender != null">gender = #{gender},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+</mapper>

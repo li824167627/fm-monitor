@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.UserLoginLogMapper">
+	
+	<insert id="insert">
+		INSERT INTO sec_user_login_log
+		(uid, deviceId, os, model, resolution, fromType, data, oTime, otype, state)
+		VALUES
+		( #{uid}, #{deviceId}, #{os}, #{model}, #{resolution}, #{fromType}, #{data},now(), #{otype}, #{state})
+	</insert>
+	
+</mapper>

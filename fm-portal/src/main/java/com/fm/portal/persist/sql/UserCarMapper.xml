@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.UserCarMapper">
+	
+	<!-- 获取用户车辆数量 -->
+	<select id="selectCount2User" resultType="int">
+		SELECT count(*)
+		FROM sec_car_info
+		WHERE userId = #{userId}
+	</select>
+	
+	<!-- 获取用户所有车辆 -->
+	<select id="selectList2User" resultType="CarInfoBean">
+		SELECT *
+		FROM sec_car_info 
+		WHERE 
+			userId = #{userId}
+		ORDER BY createTime desc
+	</select>
+	
+	<!-- 获取车辆信息 -->
+	<select id="selectOneById" resultType="CarInfoBean">
+		SELECT *
+		FROM sec_car_info 
+		WHERE 
+			id = #{id}
+	</select>
+	
+	<!-- 替换车辆信息，如果为空则插入新记录 -->
+	<insert id="replaceCarInfo" parameterType="CarInfoBean">
+		 REPLACE INTO sec_car_info 
+		 (no, letter, createTime, userId) 
+		 VALUES 
+		(#{no}, #{letter}, now(), #{userId})
+        <selectKey resultType="int" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+	</insert>
+	
+	<!-- 删除车辆信息 -->
+	<delete id="delete">
+		delete from sec_car_info
+        where id = #{id}
+	</delete>
+	
+</mapper>

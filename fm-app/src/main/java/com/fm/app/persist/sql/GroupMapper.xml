@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.app.persist.sql.GroupMapper">
+
+	<!-- 获取用户所有分组数量 -->
+	<select id="selectGroups2UserCount" resultType="int">
+		SELECT count(*)
+		FROM sec_user_group
+		WHERE userId = #{userId}
+	</select>
+
+	<!-- 获取用户所有分组 -->
+	<select id="selectGroups2UserList" resultType="UserGroupBean">
+		SELECT *
+		FROM
+		sec_user_group
+		WHERE
+		userId = #{userId}
+		ORDER BY createTime desc
+	</select>
+
+	<!-- 获取分组 -->
+	<select id="selectOneById" resultType="UserGroupBean">
+		SELECT *
+		FROM
+		sec_user_group
+		WHERE
+		id = #{id}
+	</select>
+
+	<!-- 插入用户分组信息 -->
+	<insert id="insertGroup" parameterType="UserGroupBean">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sec_user_group
+		(userId, name, icon, tag, createTime, num)
+		VALUES
+		(#{userId}, #{name}, #{icon}, #{tag}, now(), #{num});
+	</insert>
+
+	<!-- 插入用户分组成员信息 -->
+	<insert id="insertGroupMembers">
+		INSERT INTO sec_user_group_meb
+		(groupId, userId, createTime)
+		VALUES
+		<foreach collection="list" item="bean" open="" close=""
+			separator="," index="index">
+			(#{bean.groupId}, #{bean.userId}, now())
+		</foreach>
+		ON DUPLICATE KEY UPDATE groupId=VALUES(groupId),
+		userId=VALUES(userId);
+	</insert>
+
+	<!-- 更新分组信息 -->
+	<update id="update">
+		UPDATE sec_user_group
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="icon != null">icon = #{icon},</if>
+			<if test="num != null">num = #{num},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<!-- 删除分组 -->
+	<delete id="del">
+		delete from sec_user_group
+		where id = #{id}
+	</delete>
+
+	<!-- 删除分组下所有成员 -->
+	<delete id="delMembers">
+		delete from sec_user_group_meb
+		where groupId =
+		#{groupId}
+	</delete>
+
+	<!-- 删除分组成员 -->
+	<delete id="delGroupMembers">
+		delete from sec_user_group_meb
+		where userId in
+		(
+		<foreach item="item" collection="list" open="(" separator=","
+			close=")">
+			#{item.userId}
+		</foreach>
+		)
+		and groupId in
+		(
+		<foreach item="item" collection="list" open="(" separator=","
+			close=")">
+			#{item.groupId}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 获取用户所有分组 -->
+	<select id="selectUidByGroupId" resultType="UserBean">
+		SELECT u.*
+		FROM
+		sec_user_group_meb m
+		left join sec_user u
+		on m.userid = u.id
+		WHERE
+		m.groupId = #{groupId}
+		ORDER BY createTime desc
+	</select>
+
+	<select id="selectMemberCout2Group" resultType="int">
+		SELECT count(*)
+		FROM sec_user_group_meb
+		WHERE
+		groupId = #{groupId}
+	</select>
+
+
+</mapper>

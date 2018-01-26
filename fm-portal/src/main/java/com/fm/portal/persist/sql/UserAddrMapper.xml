@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.UserAddrMapper">
+	
+	<resultMap type="UserAddrVo" id="UserAddrMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<result property="plotName" column="plotName"/>
+		<result property="plotAddr" column="plotAddr"/>
+		<result property="plotType" column="plotType"/>
+	</resultMap>
+	
+	<!-- 获取用户所有地址数量 -->
+	<select id="selectAddrs2UserCount" resultType="int">
+		SELECT count(*)
+		FROM sec_user_addr
+		<where>
+			 userId = #{userId}
+			<if test="showType != 0">
+				and showType = 1
+				and state = 1
+			</if>
+		</where>
+	</select>
+	
+	<!-- 获取用户所有地址 -->
+	<select id="selectAddrs2UserList" resultMap="UserAddrMap">
+		SELECT a.*, p.name as plotName, p.address as plotAddr, p.type as plotType
+		FROM sec_user_addr a
+		LEFT JOIN sec_plot p
+		on a.plotId = p.id
+		<where>
+			 a.userId = #{userId}
+			<if test="showType != 0">
+				and a.showType = 1
+				and a.state = 1
+			</if>
+		</where>
+		ORDER BY a.createTime desc
+	</select>
+	
+	<!-- 获取地址 -->
+	<select id="selectOneById" resultType="UserAddrBean">
+		SELECT a.*, p.name as plotName, p.type as plotType
+		FROM sec_user_addr a
+		LEFT JOIN sec_plot p
+		on a.plotId = p.id 
+		WHERE 
+			a.id = #{id}
+	</select>
+	
+	<!-- 插入用户地址信息 -->
+	<insert id="insert">
+		INSERT INTO sec_user_addr
+		(userId, type, plotId, conPhone, conName, ext, district, addr, 
+		 createTime, state, isDef, showType)
+		VALUES
+		(#{userId}, #{type}, #{plotId}, #{conPhone}, #{conName}, #{ext}, #{district}, 
+		#{addr}, now(), 0, #{isDef}, 0);
+	</insert>
+	
+	<!-- 更新地址信息 -->
+	<update id="update">
+		UPDATE sec_user_addr
+		<set>
+			<if test="type != null">type = #{type},</if>
+			<if test="plotId != null">plotId = #{plotId},</if>
+			<if test="conPhone != null">conPhone = #{conPhone},</if>
+			<if test="conName != null">conName = #{conName},</if>
+			<if test="ext != null">ext = #{ext},</if>
+			<if test="district != null">district = #{district},</if>
+			<if test="addr != null">addr = #{addr},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="isDef != null">isDef = #{isDef},</if>
+			<if test="showType != null">showType = #{showType},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 删除地址 -->
+	<delete id="delAddr">
+		delete from sec_user_addr
+        where id = #{id}
+	</delete>
+	
+
+</mapper>

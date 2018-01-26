@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocols>
+
+	<!-- 文件-上传文件 -->
+	<protocol name="uploadFile" requestMapping="/v1/uploadFile" resType="json"
+			  notes="文件-上传文件" state="1" requestName="UploadFileParam" resDataType="object" responseName="RQiniuFileBean">
+		<request>
+			<param name="media_id" type="String" demoValue="微信的media_id" notes="微信的media_id">
+				<notEmpty message="media_id不能为空！" />
+			</param>
+		</request>
+	</protocol>
+	
+	<!-- 七牛-配置信息 -->
+	<protocol name="getQiNiuConfig" requestMapping="/v1/getQiNiuConfig" resType="json"
+			  notes="七牛-配置信息" state="1" resDataType="object" responseName="RQiNiuConfigBean">
+	</protocol>
+	
+	<!-- 文件-上传图片到七牛云 -->
+	<protocol name="uploadImage" requestMapping="/v1/uploadImage" resType="json"
+			notes="七牛-上传文件" state="1" resDataType="object" responseName="RQiniuFileBean">
+	</protocol>
+	
+	
+</protocols>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.app.persist.sql.MsgMapper">
+
+	<insert id="insert">
+		<selectKey resultType="int" order="AFTER" keyProperty="mid">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		INSERT INTO sec_message
+		(tuid, title, content, type, code, extras,
+		addTime, isRead, loginPort)
+		VALUES
+		(#{tuid},#{title},#{content},#{type},#{code},#{extras},now(),0,
+		#{loginPort})
+	</insert>
+
+	<select id="selecMsgs2UserCount" resultType="int">
+		select count(*)
+		from sec_message
+		<where>
+			<if test="type != 0">
+				type = #{type}
+			</if>
+			and tuid = #{tuid}
+			<if test="loginPort != -1">
+				and m.loginPort = #{loginPort}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="selectMsgs2UserList" resultType="MessageBean">
+		select m.*
+		from sec_message m
+		<where>
+			<if test="type != 0">
+				m.type = #{type}
+			</if>
+			and m.tuid = #{tuid}
+			<if test="loginPort != -1">
+				and m.loginPort = #{loginPort}
+			</if>
+		</where>
+		order by m.addTime DESC
+
+	</select>
+
+	<select id="selectOneById" resultType="MessageBean">
+		select *
+		from sec_message
+		<where>
+			and mid = #{mid}
+		</where>
+		order by addTime DESC
+	</select>
+
+	<update id="updateIsRead">
+		UPDATE sec_message
+		<set>
+			isRead = 1
+		</set>
+		WHERE mid = #{mid}
+	</update>
+
+	<select id="selectUnReadCout" resultType="int">
+		select count(*)
+		from sec_message
+		<where>
+			<if test="type != 0">
+				type = #{type}
+			</if>
+			and tuid = #{tuid}
+			and isRead = 0
+		</where>
+	</select>
+
+
+	<update id="updateIsRead2Type">
+		UPDATE sec_message
+		<set>
+			isRead = 1
+		</set>
+		<where>
+			<if test="type != 0">
+				type = #{type}
+			</if>
+			and tuid = #{tuid}
+			and isRead = 0
+		</where>
+	</update>
+
+
+
+	<insert id="insertBatch">
+		INSERT INTO sec_message
+		(tuid, title, content, type, code, extras,
+		addTime, isRead, loginPort)
+		VALUES
+		<foreach collection="beans" item="item" open="" close=""
+			index="index" separator=",">
+			( #{item.tuid}, #{item.title},
+			#{item.content}, #{item.type}, #{item.code},
+			#{item.extras},now(),#{item.isRead},#{item.loginPort})
+		</foreach>
+	</insert>
+
+
+
+
+
+</mapper>

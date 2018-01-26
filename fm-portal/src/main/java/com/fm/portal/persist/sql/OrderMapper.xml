@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fm.portal.persist.sql.OrderMapper">
+	
+	<!-- 插入用户工单信息 -->
+	<insert id="insertOrder">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+	          SELECT LAST_INSERT_ID()
+	    </selectKey>
+		 INSERT INTO sec_user_order 
+		 (userId, type, sType, content, checkContact, plotId, extAddr, orderNo, createTime, expireTime, isExpire) 
+		 VALUES 
+		(#{userId}, #{type}, #{sType}, #{content}, #{checkContact}, #{plotId}, #{extAddr}, #{orderNo}, now(), #{expireTime}, 0 )
+	</insert>	
+	
+	<!-- 插入用户工单门禁信息 -->
+	<insert id="insertOrderVist">
+		 INSERT INTO sec_user_order_visit 
+		 (id, orderId, orderNo, userId, toUserId, state, isView, viewTime, createTime, visitTime) 
+		 VALUES 
+		(#{id},#{orderId}, #{orderNo}, #{userId}, #{toUserId}, #{state}, #{isView}, #{viewTime}, now(), #{visitTime})
+	</insert>	
+	
+	<select id="selectOneById" resultType="UserOrderBean">
+		select * from 
+		sec_user_order 
+		<where>
+			id = #{id}
+		</where>
+	</select>
+
+
+	<resultMap type="UserOrderVo" id="UserOrderMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<result property="userName" column="userName"/>
+		<result property="userPhone" column="userPhone"/>
+		<result property="checkContact" column="checkContact"/>
+		<result property="viewTime" column="oViewTime"/>
+		<result property="isView" column="oIsView"/>
+		<association property="plot" javaType="PlotInfoBean">
+			<id property="id" column="plotId"/>
+			<result property="name" column="plotName"/>
+			<result property="address" column="address"/>
+			<result property="type" column="plotType"/>
+			<result property="propertyName" column="propertyName"/>
+		</association> 
+		<collection property="visit" ofType="OrderVistBean">
+			<id property="ovId" column="ovId"/>
+			<result property="state" column="ovState"/>
+			<result property="ovName" column="ovName"/>
+			<result property="ovPhone" column="ovPhone"/>
+			<result property="ovIcon" column="ovIcon"/>
+			<result property="ovUid" column="ovUid"/>
+			<result property="reason" column="reason"/>
+			<result property="visitTime" column="visitTime"/>
+			<result property="visitNum" column="visitNum"/>
+			<result property="viewTime" column="ovViewTime"/>
+			<result property="isView" column="ovIsView"/>
+			<result property="actionTime" column="ovActionTime"/>
+		</collection> 
+	</resultMap>
+	
+	<select id="selecOrders2UserCount" resultType="int">
+		select count(DISTINCT o.orderNo) from 
+		sec_user_order o
+		left join sec_user_order_visit v
+		on o.id = v.orderId
+		<where>
+			<if test="type==1">
+				and v.userId = #{userId}
+			</if>
+			<if test="type==2">
+				and v.toUserId = #{userId}
+			</if>
+			<if test="time != null">
+				and v.visitTime = #{time}
+			</if>
+			<if test="plotId != 0">
+				and o.plotId = #{plotId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectOrders2UserList" resultMap="UserOrderMap">
+		select o.*,u.name as userName, u.phone as userPhone, 
+		 ov.id as ovId, ov.state as ovState,  
+		 ov.actionTime as ovActionTime,ov.visitTime,ov.visitNum,
+		 <if test="type == 2">
+			o.isView as ovIsView, o.viewTime as ovViewTime,
+			ov.isView as oIsView, ov.viewTime as oViewTime,
+		 	ov.userId as ovUid,
+		 </if>
+		  <if test="type == 1">
+			ov.isView as ovIsView, ov.viewTime as ovViewTime,
+			o.isView as oIsView, o.viewTime as oViewTime,
+		 	ov.toUserId as ovUid,
+		 </if>
+		 vu.name as ovName, vu.phone as ovPhone, vu.icon as ovIcon,ov.reason,
+		 p.id as plotId, p.name as plotName, p.address, p.type as plotType, pr.name as propertyName
+		from sec_user_order o
+		left join sec_user_order_visit ov
+		on o.id = ov.orderId
+		left join sec_plot p
+		on o.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_user vu
+		<if test="type == 2">
+			on ov.userId = vu.id 
+		</if>
+		<if test="type == 1">
+			on ov.toUserId = vu.id
+		</if>
+		left join sec_user u
+		<if test="type == 1">
+			on ov.userId = u.id 
+		</if>
+		<if test="type == 2">
+			on ov.toUserId = u.id
+		</if>
+		<where>
+			<if test="type == 1">
+				ov.userId = #{userId}
+			</if>
+			<if test="type == 2">
+				ov.toUserId = #{userId}
+			</if>
+			<if test="time != null">
+				and ov.visitTime = #{time}
+			</if>
+			<if test="plotId != 0">
+				and o.plotId = #{plotId}
+			</if>
+		</where>
+		order by createTime desc
+		<if test="length != -1">
+			LIMIT #{start},#{length}
+		</if>
+	</select>
+	
+	
+	<select id="selecOrders2TokenCount" resultType="int">
+		select count(DISTINCT o.orderNo) from 
+		sec_user_order o
+		left join sec_user_order_visit v
+		on o.id = v.orderId
+		<where>
+			<if test="type==2">
+				and v.userId = #{userId}
+			</if>
+			<if test="type==1">
+				and v.toUserId = #{userId}
+			</if>
+			<if test="time != null">
+				and v.visitTime = #{time}
+			</if>
+			<if test="plotId != 0">
+				and o.plotId = #{plotId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectOrders2Token" resultMap="UserOrderMap">
+		select o.*,u.name as userName, u.phone as userPhone, 
+		 ov.id as ovId, ov.state as ovState, ov.actionTime as ovActionTime,ov.visitTime,ov.visitNum,
+		  <if test="type == 2">
+			o.isView as ovIsView, o.viewTime as ovViewTime,
+			ov.isView as oIsView, ov.viewTime as oViewTime,
+		 	ov.userId as ovUid,
+		 </if>
+		  <if test="type == 1">
+			ov.isView as ovIsView, ov.viewTime as ovViewTime,
+			o.isView as oIsView, o.viewTime as oViewTime,
+		 	ov.toUserId as ovUid,
+		 </if>
+		 vu.name as ovName, vu.phone as ovPhone, vu.icon as ovIcon,ov.reason,
+		 p.id as plotId, p.name as plotName, p.address, p.type as plotType, pr.name as propertyName
+		from sec_user_order o
+		
+		left join sec_user_order_visit ov
+		on o.id = ov.orderId
+		left join sec_plot p
+		on o.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_user vu
+		<if test="type == 2">
+			on ov.userId = vu.id 
+		</if>
+		<if test="type == 1">
+			on ov.toUserId = vu.id
+		</if>
+		left join sec_user u
+		<if test="type == 1">
+			on ov.userId = u.id 
+		</if>
+		<if test="type == 2">
+			on ov.toUserId = u.id
+		</if>
+		<where>
+			<if test="type == 2">
+				ov.userId = #{userId}
+			</if>
+			<if test="type == 1">
+				ov.toUserId = #{userId}
+			</if>
+			<if test="time != null">
+				and ov.visitTime = #{time}
+			</if>
+			<if test="plotId != 0">
+				and o.plotId = #{plotId}
+			</if>
+		</where>
+		order by createTime desc
+	</select>
+	
+	<select id="selectOrderVoById" resultMap="UserOrderMap">
+		select o.*,u.name as userName, u.phone as userPhone, 
+		 ov.id as ovId, ov.state as ovState, ov.isView as ovIsView, ov.viewTime as ovViewTime,ov.actionTime as ovActionTime,ov.visitNum,
+		 ov.userId as ovUid, vu.name as ovName, vu.phone as ovPhone, vu.icon as ovIcon,ov.reason,
+		 p.id as plotId, p.name as plotName, p.address, p.type as plotType, pr.name as propertyName
+		from sec_user_order o
+		left join sec_user u
+		on o.userId = u.id
+		left join sec_user_order_visit ov
+		on o.id = ov.orderId
+		left join sec_plot p
+		on o.plotId = p.id
+		left join sec_property pr
+		on p.propertyId = pr.id
+		left join sec_user vu
+			on ov.userId = vu.id
+		<where>
+			<if test="time != null">
+				and ov.visitTime = #{time}
+			</if>
+			and o.id = #{oid}
+		</where>
+		order by ov.visitTime DESC
+	</select>
+	
+	
+	<!-- 插入用户来访成员信息 -->
+	<insert id="insertUsersOrder">
+		INSERT INTO sec_user_order_visit 
+		 (id, orderId, orderNo, userId, toUserId, state, isView, viewTime, createTime, visitTime) 
+		 VALUES 
+		 <foreach collection="list" item="bean" open="" close="" separator="," index="index">
+		(#{bean.id},#{bean.orderId}, #{bean.orderNo}, #{bean.userId}, #{bean.toUserId}, #{bean.state}, #{bean.isView}, #{bean.viewTime}, now(), #{bean.visitTime})
+		</foreach>
+	</insert>
+	
+	<!-- 更新来访状态 -->
+	<update id="updateVisitState">
+		UPDATE sec_user_order_visit
+		<set>
+			<if test="state != null">
+				state = #{state},
+			</if>
+			
+			<if test="reason != null">
+				reason = #{reason},
+			</if>
+			isView = 1,
+			viewTime = now(),
+			actionTime = now()
+		</set>
+		WHERE orderId = #{orderId}
+	</update>
+	
+	<!-- 更新保安审核 -->
+	<update id="updateVisitAuth">
+		UPDATE sec_user_order_visit
+		<set>
+			authTime = now(),
+			authSecId = #{authSecId},
+			visitNum = #{visitNum}
+		</set>
+		WHERE orderId = #{orderId}
+	</update>
+	
+	
+	<resultMap type="UserOrderVisitVo" id="UserOrderVisitMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="visit" javaType="OrderVistBean">
+			<id property="ovId" column="ovId"/>
+			<result property="state" column="ovState"/>
+			<result property="ovName" column="ovName"/>
+			<result property="ovPhone" column="ovPhone"/>
+			<result property="ovIcon" column="ovIcon"/>
+			<result property="ovUid" column="ovUid"/>
+			<result property="isView" column="ovIsView"/>
+			<result property="reason" column="reason"/>
+			<result property="viewTime" column="ovViewTime"/>
+			<result property="visitNum" column="visitNum"/>
+			<result property="actionTime" column="ovActionTime"/>
+		</association> 
+	</resultMap>
+	
+	<select id="selectVisitbyId" resultMap="UserOrderVisitMap">
+		select o.*, ov.id as ovId, ov.state as ovState, ov.isView as ovIsView, ov.viewTime as ovViewTime, ov.visitNum,  
+			ov.actionTime as ovActionTime, ov.userId as ovUid, ov.reason
+		from sec_user_order o
+		left join sec_user_order_visit ov
+		on o.id = ov.orderId
+		where ov.id = #{id}
+	</select>
+	
+	
+	<!-- 插入用户工单门禁日志信息 -->
+	<insert id="insertVisitLog">
+		 INSERT INTO sec_user_visit_log
+		 (visitId, orderId, orderNo, authTime, authUid, authSecName, plotName, plotBoxName,
+		 	 content, extAddr, state, reason) 
+		 VALUES 
+		 (#{visitId},#{orderId}, #{orderNo}, now(), #{authUid}, #{authSecName}, #{plotName}, #{plotBoxName},
+			 #{content}, #{extAddr}, #{state}, #{reason})
+	</insert>	
+	
+	
+	<!-- 更新保安审核 -->
+	<update id="updateAddr">
+		UPDATE sec_user_order
+		<set>
+			extAddr = #{extAddr},
+			plotId = #{plotId}
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="selecVisitLogs2SecCount" resultType="int">
+		select count(*)
+		from sec_user_visit_log
+		<where>
+			authUid = #{userId}
+			<if test="authTime!=null">
+				and authTime = #{authTime}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectVisitLogs2Sec" resultType="UserVisitLogBean">
+		select *
+		from sec_user_visit_log
+		<where>
+			authUid = #{userId}
+			<if test="authTime!=null">
+				and authTime = #{authTime}
+			</if>
+		</where>
+		order by authTime desc
+		LIMIT #{start},#{length}
+	</select>
+	
+	
+	<select id="selectOneByOidUid" resultType="UserOrderVisitBean">
+		select *
+		from sec_user_order_visit 
+		<where>
+			orderId = #{oid}
+			<if test="type==1">
+				and userId = #{userId}
+			</if>
+			<if test="type==2">
+				and toUserId = #{userId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 更新visit消息已读 -->
+	<update id="updateVisitView">
+		UPDATE sec_user_order_visit
+		<set>
+			isView = #{isView},
+			viewTime = now()
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 更新消息已读 -->
+	<update id="updateOrderView">
+		UPDATE sec_user_order
+		<set>
+			isView = #{isView},
+			viewTime = now()
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+	
+	
+</mapper>
