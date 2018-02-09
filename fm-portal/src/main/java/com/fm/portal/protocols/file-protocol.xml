@@ -2,8 +2,8 @@
 <protocols>
 
 	<!-- 文件-上传文件 -->
-	<protocol name="uploadFile" requestMapping="/v1/uploadFile" resType="json"
-			  notes="文件-上传文件" state="1" requestName="UploadFileParam" resDataType="object" responseName="RQiniuFileBean">
+	<protocol name="uploadWechatFile" requestMapping="/v1/uploadWechatFile" resType="json"
+			  notes="文件-微信上传文件" state="1" requestName="UploadFileParam" resDataType="object" responseName="RQiniuFileBean">
 		<request>
 			<param name="media_id" type="String" demoValue="微信的media_id" notes="微信的media_id">
 				<notEmpty message="media_id不能为空！" />
@@ -17,9 +17,13 @@
 	</protocol>
 	
 	<!-- 文件-上传图片到七牛云 -->
-	<protocol name="uploadImage" requestMapping="/v1/uploadImage" resType="json"
+	<protocol name="upload2QiNiuImage" requestMapping="/v1/upload2QiNiuImage" resType="json"
 			notes="七牛-上传文件" state="1" resDataType="object" responseName="RQiniuFileBean">
 	</protocol>
 	
-	
+	<!-- 文件-上传图片 -->
+	<protocol name="upload2FdfsImage" requestMapping="/v1/upload2FdfsImage" resType="json"
+			notes="文件-上传图片" state="1" resDataType="object" responseName="RFdfsFileBean">
+	</protocol>
+
 </protocols>

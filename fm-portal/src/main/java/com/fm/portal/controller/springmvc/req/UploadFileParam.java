@@ -4,7 +4,7 @@ package com.fm.portal.controller.springmvc.req;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * 文件-上传文件
+ * 文件-微信上传文件
  **/
 public class UploadFileParam {
 	@NotEmpty(message = "media_id不能为空！")

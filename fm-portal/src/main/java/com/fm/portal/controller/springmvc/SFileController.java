@@ -23,11 +23,12 @@ public class SFileController {
 	com.fm.portal.controller.FileController fileController;
 
 	/**
-	 * 文件-上传文件
+	 * 文件-微信上传文件
 	 **/
-	@RequestMapping("/v1/uploadFile")
+	@RequestMapping("/v1/uploadWechatFile")
 	@ResponseBody
-	public ObjectResult<RQiniuFileBean> uploadFile(@Validated UploadFileParam param, BindingResult error, HttpServletRequest request, HttpServletResponse response) {
+	public ObjectResult<RQiniuFileBean> uploadWechatFile(@Validated UploadFileParam param, BindingResult error,
+			HttpServletRequest request, HttpServletResponse response) {
 		ObjectResult<RQiniuFileBean> res = new ObjectResult<RQiniuFileBean>();
 		if (error.hasErrors()) {
 			res.setRescode(BaseResult.param.getCode());
@@ -35,7 +36,7 @@ public class SFileController {
 			return res;
 		}
 
-		return fileController.uploadFile(param, request, response);
+		return fileController.uploadWechatFile(param, request, response);
 	}
 
 	/**
@@ -51,10 +52,20 @@ public class SFileController {
 	/**
 	 * 七牛-上传文件
 	 **/
-	@RequestMapping("/v1/uploadImage")
+	@RequestMapping("/v1/upload2QiNiuImage")
 	@ResponseBody
-	public ObjectResult<RQiniuFileBean> uploadImage(HttpServletRequest request, HttpServletResponse response) {
+	public ObjectResult<RQiniuFileBean> upload2QiNiuImage(HttpServletRequest request, HttpServletResponse response) {
 
-		return fileController.uploadImage(request, response);
+		return fileController.upload2QiNiuImage(request, response);
+	}
+
+	/**
+	 * 文件-上传图片
+	 **/
+	@RequestMapping("/v1/upload2FdfsImage")
+	@ResponseBody
+	public ObjectResult<RFdfsFileBean> upload2FdfsImage(HttpServletRequest request, HttpServletResponse response) {
+
+		return fileController.upload2FdfsImage(request, response);
 	}
 }

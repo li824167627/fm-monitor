@@ -32,17 +32,8 @@
 		<mvc:interceptor>
 			<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
 			<mvc:mapping path="/app/account/**" />
-			<mvc:mapping path="/app/group/**" />
-			<mvc:mapping path="/app/contact/**" />
 			<mvc:mapping path="/app/user/**" />
-			<mvc:mapping path="/app/plot/**" />
-			<mvc:mapping path="/app/access/**" />
-			<mvc:mapping path="/app/express/**" />
-			<mvc:mapping path="/app/order/**" />
 			<mvc:mapping path="/app/common/v1/upgradeVersion" />
-
-			<!-- 页面 -->
-			<mvc:mapping path="/app/page/**" />
 
 			<mvc:exclude-mapping path="/app/account/v1/login" /><!--登录 -->
 			<mvc:exclude-mapping path="/app/account/v1/checkVcode" /> <!-- 校验token -->
@@ -75,8 +66,8 @@
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
-		<!-- 指定所上传文件的总大小不能超过10M。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
-		<property name="maxUploadSize" value="10000000" />
+		<!-- 指定所上传文件的总大小不能超过16M。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+		<property name="maxUploadSize" value="16777216" />
 	</bean>
 
 	<!-- json转换 -->

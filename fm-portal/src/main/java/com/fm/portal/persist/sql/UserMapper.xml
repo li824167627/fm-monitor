@@ -121,6 +121,8 @@
         </foreach>    
 	</select>
 	
-	
+	<select id="selectListAll" resultType="UserBean">
+	SELECT * FROM TEST_USER
+	</select>
 
 </mapper>

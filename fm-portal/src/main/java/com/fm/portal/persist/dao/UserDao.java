@@ -26,4 +26,6 @@ public interface UserDao {
 
 	List<UserBean> selectListByIds(List<String> uids);
 
+	List<UserBean> selectListAll();
+
 }

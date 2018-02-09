@@ -19,6 +19,8 @@ public class UserBean {
 	private Timestamp regTime;
 	private Timestamp lastLoginTime;
 
+	private String username;
+
 	public String getId() {
 		return id;
 	}
@@ -106,4 +108,20 @@ public class UserBean {
 	public void setLastLoginTime(Timestamp lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	@Override
+	public String toString() {
+		return "UserBean [id=" + id + ", password=" + password + ", phone=" + phone + ", name=" + name + ", icon="
+				+ icon + ", letter=" + letter + ", gender=" + gender + ", openid=" + openid + ", isSetPwd=" + isSetPwd
+				+ ", regTime=" + regTime + ", lastLoginTime=" + lastLoginTime + ", username=" + username + "]";
+	}
+
 }

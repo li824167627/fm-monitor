@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.fm.portal.cache.dao.AccountCacheDao;
 import com.fm.portal.controller.res.ObjectResult;
+import com.fm.portal.controller.res.bean.RFdfsFileBean;
 import com.fm.portal.controller.res.bean.RQiNiuConfigBean;
 import com.fm.portal.controller.res.bean.RQiniuFileBean;
 import com.fm.portal.controller.springmvc.req.UploadFileParam;
+import com.fm.portal.service.FileService;
 import com.fm.portal.service.QiniuService;
 import com.fm.portal.service.exception.ServiceException;
 
@@ -21,9 +23,12 @@ public class FileController {
 	QiniuService qiniuServiceImpl;
 
 	@Autowired
+	FileService fileServiceImpl;
+
+	@Autowired
 	AccountCacheDao accountCacheImpl;
 
-	public ObjectResult<RQiniuFileBean> uploadFile(UploadFileParam param, HttpServletRequest request,
+	public ObjectResult<RQiniuFileBean> uploadWechatFile(UploadFileParam param, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		ObjectResult<RQiniuFileBean> result = new ObjectResult<>();
@@ -38,7 +43,7 @@ public class FileController {
 		return result;
 	}
 
-	public ObjectResult<RQiniuFileBean> uploadImage(HttpServletRequest request, HttpServletResponse response) {
+	public ObjectResult<RQiniuFileBean> upload2QiNiuImage(HttpServletRequest request, HttpServletResponse response) {
 		ObjectResult<RQiniuFileBean> result = new ObjectResult<>();
 		try {
 			RQiniuFileBean file = qiniuServiceImpl.uploadImgFile(request);
@@ -61,6 +66,20 @@ public class FileController {
 			result.setFlag(true);
 		} catch (ServiceException e) {
 			result.setServiceException(e);
+		}
+		return result;
+	}
+
+	public ObjectResult<RFdfsFileBean> upload2FdfsImage(HttpServletRequest request, HttpServletResponse response) {
+		ObjectResult<RFdfsFileBean> result = new ObjectResult<>();
+		try {
+			RFdfsFileBean file = fileServiceImpl.uploadImg(request);
+			result.setData(file);
+			result.setFlag(file != null);
+		} catch (ServiceException e) {
+			result.setServiceException(e);
+		} catch (Exception e) {
+			result.setMsg(e.getMessage());
 		}
 		return result;
 	}

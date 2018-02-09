@@ -64,4 +64,9 @@ public class UserImpl extends BaseImpl implements UserDao {
 		return sqlSessionTemplate.selectList(NAME_SPACE + ".selectListByIds", where);
 	}
 
+	@Override
+	public List<UserBean> selectListAll() {
+		return sqlSessionTemplate.selectList(NAME_SPACE + ".selectListAll");
+	}
+
 }
