@@ -1,4 +1,4 @@
-package com.fm.portal.util;
+package com.fm.portal.util.mail;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;

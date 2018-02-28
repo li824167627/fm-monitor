@@ -19,7 +19,6 @@
 			</list>
 		</property>
 	</bean>
-
 	<bean
 		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 	<tx:annotation-driven proxy-target-class="true"

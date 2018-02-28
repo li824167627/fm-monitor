@@ -1,4 +1,4 @@
-package com.fm.portal.util;
+package com.fm.portal.util.mail;
 
 public class MailSendUtil {
 	public static boolean sendMail(String toEamil, String theme, String content) {

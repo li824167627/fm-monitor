@@ -1,5 +1,6 @@
 package com.fm.portal.service;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.csource.common.MyException;
@@ -42,10 +43,21 @@ public class FastDFSManager {
 		}
 	}
 
+	/**
+	 * 上传文件
+	 * 
+	 * @param file_buff
+	 *            文件字节数组
+	 * @param file_ext_name
+	 *            文件扩展名
+	 * @param meta_list
+	 *            文件媒体信息
+	 * @return
+	 */
 	public String[] upload(byte[] file_buff, String file_ext_name, NameValuePair meta_list[]) {
 		TrackerServer trackerServer = null;
 		StorageServer storageServer = null;
-		StorageClient storageClient = null;
+		StorageClient storageClient = null; // 这里的storageServer可以为空；如果为空会自动从trackerServer中获取，如果需要指定具体的storage可以在这里进行初始化。
 		try {
 			trackerServer = trackerClient.getConnection();
 			storageServer = trackerClient.getStoreStorage(trackerServer);
@@ -74,6 +86,20 @@ public class FastDFSManager {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 获取文件扩展名
+	 * 
+	 * @param name
+	 * @return
+	 */
+	private String getFileExtName(String name) {
+		String extName = "";
+		if (name != null && name.contains(".")) {
+			extName = name.substring(name.lastIndexOf(".") + 1);
+		}
+		return extName;
 	}
 
 	// public void upload(String local_file, String file_ext_name, NameValuePair
