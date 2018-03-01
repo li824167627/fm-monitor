@@ -24,7 +24,3 @@ project(':northend-interface-go').buildFileName = 'build.gradle'
 includeFlat 'northend-util'
 project(':northend-util').projectDir = new File(settingsDir, '../../northend/northend-util')
 project(':northend-util').buildFileName = 'build.gradle'
-
-includeFlat 'northend-wechat-core'
-project(':northend-wechat-core').projectDir = new File(settingsDir, '../../northend/northend-wechat-core')
-project(':northend-wechat-core').buildFileName = 'build.gradle'
