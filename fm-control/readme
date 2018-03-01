@@ -1,0 +1,8 @@
+spring netty mybatis redis
+
+# 编译
+gradle release
+
+# 启动
+java -Djava.ext.dirs=./lib:$JAVA_HOME/jre/lib/ext  -jar env-portal.jar
+
