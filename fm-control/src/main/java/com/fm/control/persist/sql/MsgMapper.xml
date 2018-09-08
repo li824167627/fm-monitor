@@ -4,9 +4,11 @@
 
 	<insert id="insert">
 		INSERT INTO msg
-		( sn,pm2p5,co2,tvoc,humidity,temperature,pm10 )
+		(
+		sn,pm2p5,co2,tvoc,humidity,temperature,pm10 )
 		VALUES
-		( #{sn},#{pm2p5},#{co2},#{tvoc},#{humidity},#{temperature},#{pm10} )
+		(
+		#{sn},#{pm2p5},#{co2},#{tvoc},#{humidity},#{temperature},#{pm10} )
 	</insert>
 
 </mapper>

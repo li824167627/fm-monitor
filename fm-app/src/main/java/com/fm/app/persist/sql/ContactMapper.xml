@@ -26,14 +26,17 @@
 	<!-- 获取用户所有联系人 -->
 	<select id="selectContacts2UserList" resultMap="ContactMap">
 		SELECT
-		r.id as rid, r.state as rstate, r.userId, r.toUserId,
-		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		r.id as
+		rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime,
+		r.actionTime, r.remark, r.type as rtype, u.*
 		FROM sec_user_relation r
 		left join sec_user u
 		on r.toUserId = u.id
 		WHERE
 		r.userId = #{userId}
-		and r.state = 1
+		and
+		r.state = 1
 		ORDER BY u.letter
 	</select>
 
@@ -55,14 +58,17 @@
 
 	<select id="selectlinkedContacts2User" resultMap="ContactMap">
 		SELECT
-		r.id as rid, r.state as rstate, r.userId, r.toUserId,
-		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		r.id as
+		rid, r.state as rstate, r.userId, r.toUserId,
+		r.applyTime,
+		r.actionTime, r.remark, r.type as rtype, u.*
 		FROM sec_user_relation r
 		left join sec_user u
 		on r.toUserId = u.id
 		WHERE
 		r.userId = #{userId}
-		and (r.state = 1 or r.state = 0)
+		and
+		(r.state = 1 or r.state = 0)
 		ORDER BY u.letter
 	</select>
 
@@ -92,10 +98,13 @@
 	<!-- 获取申请用户的联系人 -->
 	<select id="selectApplyList" resultMap="ContactMap">
 		SELECT
-		r.id as rid, r.state as rstate, r.userId, r.toUserId,
-		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		r.id as rid,
+		r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime,
+		r.remark, r.type as rtype, u.*
 		FROM sec_user_relation r
-		left join sec_user u
+		left join
+		sec_user u
 		on r.userId = u.id
 		WHERE
 		r.toUserId = #{userId}
@@ -114,10 +123,13 @@
 	<!-- 获取用户邀请的联系人 -->
 	<select id="selectInviteList" resultMap="ContactMap">
 		SELECT
-		r.id as rid, r.state as rstate, r.userId, r.toUserId,
-		r.applyTime, r.actionTime, r.remark, r.type as rtype, u.*
+		r.id as rid,
+		r.state as rstate, r.userId, r.toUserId,
+		r.applyTime, r.actionTime,
+		r.remark, r.type as rtype, u.*
 		FROM sec_user_relation r
-		left join sec_user u
+		left join
+		sec_user u
 		on r.toUserId = u.id
 		WHERE
 		r.userId = #{userId}
@@ -136,7 +148,8 @@
 	<select id="selectGroupContactsList" resultMap="ContactMap">
 		SELECT
 		u.*
-		FROM sec_user_group_meb m
+		FROM
+		sec_user_group_meb m
 		left join sec_user u
 		on m.userId = u.id
 		WHERE
@@ -148,7 +161,8 @@
 	<select id="selectOneByUid" resultType="UserRelationBean">
 		SELECT
 		*
-		FROM sec_user_relation
+		FROM
+		sec_user_relation
 		WHERE
 		userId = #{userId}
 		and toUserId = #{toUserId}
@@ -159,7 +173,8 @@
 	<select id="selectOneById" resultType="UserRelationBean">
 		SELECT
 		*
-		FROM sec_user_relation
+		FROM
+		sec_user_relation
 		WHERE
 		id = #{id}
 	</select>
@@ -200,7 +215,8 @@
 		WHERE
 		gm.groupId = g.id
 		AND g.userId = #{userId}
-		AND gm.userId = #{conUserId};
+		AND gm.userId =
+		#{conUserId};
 	</delete>
 
 
@@ -212,7 +228,8 @@
 		sec_user_group_meb gm
 		WHERE
 		gm.groupId = g.id
-		AND g.userId = #{userId}
+		AND
+		g.userId = #{userId}
 		AND gm.userId = #{conUserId};
 	</select>
 

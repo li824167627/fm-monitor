@@ -354,8 +354,10 @@
 		<attrs>
 			<attr type="string" name="key" notes="文件名" demoValue="key" />
 			<attr type="string" name="group" notes="组名" demoValue="group1" />
-			<attr type="string" name="groupPath" notes="组内路径" demoValue="M00/00/00/rBBJClp9OXWAa_3kAAZ3LXvuwT8782.jpg" />
-			<attr type="string" name="url" notes="图片url地址" demoValue="http://172.16.73.10:8888/group1/M00/00/00/rBBJClp9TrqAWHs5AAonaeOiXZ4752.jpg" />
+			<attr type="string" name="groupPath" notes="组内路径"
+				demoValue="M00/00/00/rBBJClp9OXWAa_3kAAZ3LXvuwT8782.jpg" />
+			<attr type="string" name="url" notes="图片url地址"
+				demoValue="http://172.16.73.10:8888/group1/M00/00/00/rBBJClp9TrqAWHs5AAonaeOiXZ4752.jpg" />
 			<attr type="string" name="format" notes="文件格式" demoValue="jpeg" />
 		</attrs>
 	</bean>

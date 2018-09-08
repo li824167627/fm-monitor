@@ -78,8 +78,8 @@
 	<webConfig name="signName">
 		<value>北京浩安瑞普</value>
 	</webConfig>
-	
-	
+
+
 	<!-- 极光推送服务 -->
 	<webConfig name="appKey">
 		<value>869ff618acef846227b24b6f</value>
@@ -87,14 +87,14 @@
 	<webConfig name="masterSecret">
 		<value>92fb5751c7960a9d22bb9021</value>
 	</webConfig>
-	
+
 	<webConfig name="appKey4Sec">
 		<value>1a0ed2c8c5f65821242cd7df</value>
 	</webConfig>
 	<webConfig name="masterSecret4Sec">
 		<value>3f34f7c67fddc4d237c134d4</value>
 	</webConfig>
-	
+
 	<appVersion name="iosAppVersion">
 		<value>1.0.5</value>
 	</appVersion>

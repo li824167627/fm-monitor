@@ -25,7 +25,7 @@
 		<code>104</code>
 		<msg>[%s]输入错误！</msg>
 	</result>
-	
+
 	<result name="param_input_not_null">
 		<code>105</code>
 		<msg>%s不能为空！</msg>
@@ -45,12 +45,12 @@
 		<code>108</code>
 		<msg>%s</msg>
 	</result>
-	
+
 	<result name="login_account_password_error">
 		<code>109</code>
 		<msg>账号或密码错误</msg>
 	</result>
-	
+
 
 	<result name="user_password_not_set">
 		<code>10001</code>
@@ -71,7 +71,7 @@
 		<code>10004</code>
 		<msg>用户绑定的手机号</msg>
 	</result>
-	
+
 	<result name="third_account_not_bind_phone">
 		<code>10005</code>
 		<msg>当前账号未绑定手机号</msg>
@@ -93,26 +93,26 @@
 		<code>10104</code>
 		<msg>用户未认证</msg>
 	</result>
-	
-	
+
+
 	<result name="sec_is_not_auth">
 		<code>10107</code>
 		<msg>用户未认证保安</msg>
 	</result>
-	
+
 	<result name="sec_is_wait_auth">
 		<code>10105</code>
 		<msg>已提交保安认证，请等待审核</msg>
 	</result>
-	
+
 	<result name="sec_auth_is_pass">
 		<code>10106</code>
 		<msg>已认证为保安</msg>
 	</result>
-	
-	
-	
-	
+
+
+
+
 
 	<result name="user_token_not_null">
 		<code>11001</code>
@@ -133,27 +133,27 @@
 		<code>12501</code>
 		<msg>%s</msg>
 	</result>
-	
+
 	<result name="user_is_not_contact">
 		<code>12003</code>
 		<msg>不是联系人</msg>
 	</result>
-	
+
 	<result name="user_is_contact">
 		<code>12004</code>
 		<msg>已经是联系人</msg>
 	</result>
-	
+
 	<result name="contact_is_refuse">
 		<code>12005</code>
 		<msg>已拒绝该联系人</msg>
 	</result>
-	
+
 	<result name="group_is_not_user">
 		<code>12005</code>
 		<msg>这不是你的分组</msg>
 	</result>
-	
+
 	<!-- 业主 -->
 	<result name="user_hold_not_set">
 		<code>15001</code>
@@ -211,9 +211,9 @@
 		<code>16104</code>
 		<msg>%s拜访门禁信息无效%s</msg>
 	</result>
-	
-	
-	
+
+
+
 	<!-- 手机验证码 -->
 	<result name="vcode_is_error">
 		<code>20001</code>
@@ -239,24 +239,24 @@
 		<code>21000</code>
 		<msg>验证手机token已过期</msg>
 	</result>
-	
-	
+
+
 	<result name="checktoken_is_error">
 		<code>21001</code>
 		<msg>验证手机验证码错误</msg>
 	</result>
-	
+
 	<result name="version_is_lastest">
 		<code>30001</code>
 		<msg>当前已是最新版本</msg>
 	</result>
-	
+
 	<result name="not_have_new_version">
 		<code>30002</code>
 		<msg>没有新的版本</msg>
 	</result>
-	
-	
+
+
 
 	<!-- 数据库新增、修改、删除、查询 -->
 	<result name="database_insert_fail">

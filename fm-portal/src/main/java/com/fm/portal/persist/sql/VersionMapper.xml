@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.fm.portal.persist.sql.VersionMapper">
-	
+
 	<!-- 保安认证 -->
 	<insert id="insertUserVersion">
 		INSERT INTO sec_user_app_version
-		(vercode, userId, updateTime, verport)
+		(vercode, userId,
+		updateTime, verport)
 		VALUES
 		(#{vercode},#{userId},now(),#{verport})
 	</insert>
-	
+
 	<select id="selectMaxVer2Type" resultType="int">
 		SELECT max(vercode)
 		FROM sec_app_version
 		WHERE verport = #{verport}
 	</select>
-	
+
 	<select id="selectMaxOne2Type" resultType="VersionBean">
 		SELECT *
-		FROM sec_app_version
+		FROM
+		sec_app_version
 		WHERE verport = #{verport}
 		Order by vercode desc
 		limit 1
 	</select>
-	
+
 </mapper>

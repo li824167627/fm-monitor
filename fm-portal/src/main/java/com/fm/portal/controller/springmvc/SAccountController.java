@@ -198,3 +198,4 @@ public class SAccountController {
 		return accountController.getUserInfo(param, request, response);
 	}
 }
+ 

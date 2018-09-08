@@ -38,7 +38,7 @@ public class RescodeConstants {
 	private void parserXml() {
 		SAXBuilder builder = new SAXBuilder();
 		try {
-			Document doc = builder.build(this.getClass().getResourceAsStream("/com/fm/portal/protocols/rescodes.xml"));
+			Document doc = builder.build(this.getClass().getResourceAsStream("/cn/itcast/ssm/protocols/rescodes.xml"));
 			Element rootEl = doc.getRootElement();
 			// 获得所有子元素
 			List<Element> results = rootEl.getChildren("result");

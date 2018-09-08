@@ -3,76 +3,89 @@
 <mapper namespace="com.fm.portal.persist.sql.SecMapper">
 
 	<resultMap type="SecurityBean" id="SecMap" autoMapping="true">
-		<id property="id" column="id"/>
-			<result property="plotName" column="plotName"/>
-			<result property="address" column="address"/>
-			<result property="plotType" column="plotType"/>
-			<result property="propertyName" column="propertyName"/>
-			<result property="plotBoxName" column="plotBoxName"/>
+		<id property="id" column="id" />
+		<result property="plotName" column="plotName" />
+		<result property="address" column="address" />
+		<result property="plotType" column="plotType" />
+		<result property="propertyName" column="propertyName" />
+		<result property="plotBoxName" column="plotBoxName" />
 	</resultMap>
-	
+
 	<select id="selectOneById" resultMap="SecMap">
-		select s.*,p.name as plotName, p.address, p.type as plotType, 
-		pr.name as propertyName, pb.name as plotBoxName
+		select s.*,p.name as plotName, p.address, p.type as plotType,
+		pr.name
+		as propertyName, pb.name as plotBoxName
 		from sec_user_sec s
-		left join sec_plot p
+		left join
+		sec_plot p
 		on s.plotId = p.id
 		left join sec_property pr
-		on p.propertyId = pr.id
+		on p.propertyId =
+		pr.id
 		left join sec_plot_box pb
 		on s.boxId = pb.id
 		<where>
 			s.secId = #{secId}
 		</where>
 	</select>
-	
+
 	<select id="selectOneByPhone" resultMap="SecMap">
-		select s.*,p.name as plotName, p.address, p.type as plotType, 
-		pr.name as propertyName, pb.name as plotBoxName
+		select s.*,p.name as plotName, p.address, p.type as plotType,
+		pr.name
+		as propertyName, pb.name as plotBoxName
 		from sec_user_sec s
-		left join sec_plot p
+		left join
+		sec_plot p
 		on s.plotId = p.id
 		left join sec_property pr
-		on p.propertyId = pr.id
+		on p.propertyId =
+		pr.id
 		left join sec_plot_box pb
 		on s.boxId = pb.id
 		<where>
 			s.phone = #{phone}
 		</where>
 	</select>
-	
-	
+
+
 	<select id="selectOneByOpenId" resultMap="SecMap">
-		select s.*,p.name as plotName, p.address, p.type as plotType, 
-		pr.name as propertyName, pb.name as plotBoxName
+		select s.*,p.name as plotName, p.address, p.type as plotType,
+		pr.name
+		as propertyName, pb.name as plotBoxName
 		from sec_user_sec s
-		left join sec_plot p
+		left join
+		sec_plot p
 		on s.plotId = p.id
 		left join sec_property pr
-		on p.propertyId = pr.id
+		on p.propertyId =
+		pr.id
 		left join sec_plot_box pb
 		on s.boxId = pb.id
-		left join sec_user_third ut
+		left join
+		sec_user_third ut
 		on s.secId = ut.userId
 		<where>
 			ut.loginType = 2
 			and ut.openId = #{openId}
 		</where>
 	</select>
-	
-	
-		<!-- 保安认证 -->
+
+
+	<!-- 保安认证 -->
 	<insert id="insertSec">
 		INSERT INTO sec_user_sec
-		(secId, password,icon, name, gender, phone, height, health, idNo, ext, photo,
-			station, secNo, submitTime, state,
-			isAllot, isAuthSec, qualified)
+		(secId, password,icon, name,
+		gender, phone, height, health, idNo, ext, photo,
+		station, secNo,
+		submitTime, state,
+		isAllot, isAuthSec, qualified)
 		VALUES
-		(#{secId}, #{password},#{icon},#{name},#{gender},#{phone},#{height},#{health},#{idNo},#{ext},#{photo},
-			#{station},#{secNo},now(),#{state},
-			#{isAllot},#{isAuthSec},#{qualified})
+		(#{secId},
+		#{password},#{icon},#{name},#{gender},#{phone},#{height},#{health},#{idNo},#{ext},#{photo},
+		#{station},#{secNo},now(),#{state},
+		#{isAllot},#{isAuthSec},#{qualified})
 	</insert>
-	
+
 	<!-- 更新用户 -->
 	<update id="updateSec">
 		UPDATE sec_user_sec
@@ -138,10 +151,10 @@
 			lastLoginTime = now()
 		</set>
 		WHERE secId = #{secId};
-	</update>	
-	
-	
-	
-	
-	
+	</update>
+
+
+
+
+
 </mapper>
